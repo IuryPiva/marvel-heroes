@@ -1,13 +1,14 @@
 # base image
 FROM node:12.16.0 AS builder
 WORKDIR /app
-COPY . .
+
+COPY package.json ./
+COPY yarn.lock ./
+
 RUN yarn install
+COPY . .
 RUN yarn run build
 
-FROM node:12.16.0
 RUN yarn global add serve
-WORKDIR /app
-COPY --from=builder /app/build .
 CMD [ "yarn", "run-server" ]
 

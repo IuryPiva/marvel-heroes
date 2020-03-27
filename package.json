@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "run-server": "serve -p ${PORT} -s ."
+    "run-server": "serve -p ${PORT} -s build"
   },
   "eslintConfig": {
     "extends": "react-app"
