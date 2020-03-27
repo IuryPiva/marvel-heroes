@@ -1,22 +1,19 @@
 import React, { useState } from "react";
 import { gql } from "apollo-boost";
 import { useApolloClient } from "@apollo/react-hooks";
-import { Card, Avatar, Row, Col, List, Form, Input } from "antd";
+import { Card, Avatar, Col, List, Form, Input } from "antd";
 import {
   EditOutlined,
-  ExportOutlined,
-  ArrowLeftOutlined
+  ExportOutlined
 } from "@ant-design/icons";
 
-import "./Character.css";
 import Modal from "antd/lib/modal/Modal";
 import { Redirect } from "react-router-dom";
+import { CardProfile, CardSeries, FlyingBackArrow, Row } from "./style";
 
 const { Meta } = Card;
 
-const cardStyles = { width: 300, height: 475 };
-
-const CharacterEditForm = ({ visible, onCreate, onCancel, initialValues }) => {
+const CharacterEditForm = ({ visible, onSave, onCancel, initialValues }) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -30,7 +27,7 @@ const CharacterEditForm = ({ visible, onCreate, onCancel, initialValues }) => {
           .validateFields()
           .then(values => {
             form.resetFields();
-            onCreate(values);
+            onSave(values);
           })
           .catch(info => {
             console.log("Validate Failed:", info);
@@ -42,6 +39,7 @@ const CharacterEditForm = ({ visible, onCreate, onCancel, initialValues }) => {
         layout="vertical"
         name="form_in_modal"
         initialValues={initialValues}
+        onFinish={values => onSave(values)}
       >
         <Form.Item
           name="name"
@@ -58,6 +56,7 @@ const CharacterEditForm = ({ visible, onCreate, onCancel, initialValues }) => {
         <Form.Item name="description" label="Description">
           <Input type="textarea" />
         </Form.Item>
+        <Input type="submit" style={{ display: "none"   }}/>
       </Form>
     </Modal>
   );
@@ -89,17 +88,17 @@ export default ({ characterId }) => {
 
   const character = client.readFragment({
     id: characterId,
-    fragment: CHARACTER
+    fragment: CHARACTER,
   });
+  console.log({character})
 
-  const onCreate = values => {
+  const onSave = ({ name, description }) => {
+    const newCharacter = Object.assign({}, character, { name, description })
+    console.log({newCharacter})
     client.writeFragment({
       id: characterId,
       fragment: CHARACTER,
-      data: {
-        name: values.name,
-        description: values.description
-      }
+      data: newCharacter
     });
     setVisible(false);
   };
@@ -110,9 +109,7 @@ export default ({ characterId }) => {
     <>
       <Row gutter={4}>
         <Col>
-          <Card
-            className="character"
-            style={cardStyles}
+          <CardProfile
             cover={
               <Avatar
                 size={128}
@@ -130,9 +127,8 @@ export default ({ characterId }) => {
               </a>
             ]}
           >
-            <ArrowLeftOutlined
+            <FlyingBackArrow
               key="back"
-              style={{ position: "absolute", top: 8, left: 8, fontSize: 24 }}
               onClick={() => setBack(true)}
             />
             <Meta title={character.name} description={character.description} />
@@ -140,7 +136,7 @@ export default ({ characterId }) => {
             {visible && (
               <CharacterEditForm
                 visible={visible}
-                onCreate={onCreate}
+                onSave={onSave}
                 onCancel={() => {
                   setVisible(false);
                 }}
@@ -150,10 +146,10 @@ export default ({ characterId }) => {
                 }}
               />
             )}
-          </Card>
+          </CardProfile>
         </Col>
         <Col>
-          <Card className="character-series" style={cardStyles} title="Series">
+          <CardSeries title="Series">
             <List
               size="small"
               dataSource={character.series.items}
@@ -169,7 +165,7 @@ export default ({ characterId }) => {
                 </List.Item>
               )}
             />
-          </Card>
+          </CardSeries>
         </Col>
       </Row>
     </>

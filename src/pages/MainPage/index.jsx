@@ -1,8 +1,14 @@
 import React, { useState } from "react";
-import { List, Spin, Pagination, AutoComplete } from "antd";
-import CardDetails from "./CardDetails";
+import {
+  List,
+  Spin,
+  Pagination as _Pagination,
+  AutoComplete as _AutoComplete
+} from "antd";
+import CharacterPreview from "../../components/CharacterPreview";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
+import styled from "styled-components";
 
 const CHARACTERS = gql`
   query Characters($offset: Int!, $limit: Int!, $nameStartsWith: String!) {
@@ -33,6 +39,17 @@ const CHARACTERS = gql`
       }
     }
   }
+`;
+
+const AutoComplete = styled(_AutoComplete)`
+  width: 300px;
+  align-self: center;
+  margin-bottom: 16px;
+  justify-self: center;
+`;
+const Pagination = styled(_Pagination)`
+  align-self: center;
+  justify-self: center;
 `;
 
 export default () => {
@@ -91,12 +108,6 @@ export default () => {
   return (
     <>
       <AutoComplete
-        style={{
-          width: 300,
-          alignSelf: "center",
-          marginBottom: 16,
-          justifySelf: "center"
-        }}
         onChange={onSearch}
         onSearch={onSearch}
         options={data.characters.results}
@@ -118,7 +129,7 @@ export default () => {
         dataSource={data.characters.results}
         renderItem={item => (
           <List.Item>
-            <CardDetails
+            <CharacterPreview
               thumbnail={item.thumbnail}
               name={item.name}
               description={item.description}
@@ -128,10 +139,6 @@ export default () => {
         )}
       />
       <Pagination
-        style={{
-          alignSelf: "center",
-          justifySelf: "center"
-        }}
         onChange={onShowSizeChange}
         showSizeChanger
         onShowSizeChange={onShowSizeChange}
