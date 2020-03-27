@@ -9,8 +9,9 @@ import CharacterPreview from "../../components/CharacterPreview";
 import { useQuery } from "@apollo/react-hooks";
 import { gql } from "apollo-boost";
 import styled from "styled-components";
+import { act } from "react-dom/test-utils";
 
-const CHARACTERS = gql`
+export const CHARACTERS = gql`
   query Characters($offset: Int!, $limit: Int!, $nameStartsWith: String!) {
     characters(
       offset: $offset
@@ -127,13 +128,10 @@ export default () => {
           xxl: 3
         }}
         dataSource={data.characters.results}
-        renderItem={item => (
+        renderItem={character => (
           <List.Item>
             <CharacterPreview
-              thumbnail={item.thumbnail}
-              name={item.name}
-              description={item.description}
-              id={item.id}
+              character={character}
             />
           </List.Item>
         )}

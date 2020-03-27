@@ -9,7 +9,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 const client = new ApolloClient({
-  uri: "http://localhost:4000",
+  uri: process.env.APOLLO_SERVER_URI || "http://localhost:4000",
   cache: new InMemoryCache({
     dataIdFromObject: object => object.id
   })
