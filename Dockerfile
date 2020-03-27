@@ -9,4 +9,4 @@ FROM node:12.16.0
 RUN yarn global add serve
 WORKDIR /app
 COPY --from=builder /app/build .
-CMD ["serve", "-p", "${PORT}", "-s", "."]doc
+CMD ["serve", "-p", "\$\{PORT\}\", "-s", "."]doc
