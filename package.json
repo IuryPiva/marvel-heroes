@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "run-server": "export APOLLO_SERVER_URI=https://iurypiva-marvel-graphql.herokuapp.com/ && export PORT=3000 && serve -p ${PORT} -s build"
+    "run-server": "serve -p ${PORT} -s build"
   },
   "eslintConfig": {
     "extends": "react-app"
