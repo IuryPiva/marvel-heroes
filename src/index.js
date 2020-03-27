@@ -8,8 +8,10 @@ import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
+const apolloServerURI = process.env.NODE_ENV === 'production' ? "https://iurypiva-marvel-graphql.herokuapp.com/" : "http://localhost:4000"
+
 const client = new ApolloClient({
-  uri: process.env.APOLLO_SERVER_URI || "http://localhost:4000",
+  uri: apolloServerURI,
   cache: new InMemoryCache({
     dataIdFromObject: object => object.id
   })
